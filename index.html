@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DayZ Stash & Buried Loot Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="tracker-shell">
+    <header class="tracker-header">
+      <div class="logo-mark">Ø</div>
+      <div>
+        <p class="eyebrow">DayZ Stash Command</p>
+        <h1>Stash & Buried Loot Tracker</h1>
+      </div>
+    </header>
+
+    <div class="tracker-grid">
+      <section class="panel form-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="panel-eyebrow">LOG A NEW STASH</p>
+            <h2>Record a hidden loot cache</h2>
+          </div>
+          <p class="panel-copy">Capture stash details, mark landmarks, and keep your 14-day despawn timer accurate.</p>
+        </div>
+
+        <form id="stash-form" class="stash-form">
+          <label class="field-group">
+            <span>Stash Name</span>
+            <input id="stash-name" type="text" placeholder="Pine Tree by Nadezhda" required>
+          </label>
+
+          <label class="field-group">
+            <span>Coordinates / Location</span>
+            <input id="stash-location" type="text" placeholder="52.47, 23.18 or Old Mill" required>
+          </label>
+
+          <div class="field-group loot-group">
+            <span>Loot Manifest</span>
+            <div class="loot-checklist">
+              <label><input type="checkbox" value="Medical Supplies">Medical Supplies</label>
+              <label><input type="checkbox" value="Ammo Cache">Ammo Cache</label>
+              <label><input type="checkbox" value="Weapon Parts">Weapon Parts</label>
+              <label><input type="checkbox" value="Food Rations">Food Rations</label>
+              <label><input type="checkbox" value="Survival Gear">Survival Gear</label>
+            </div>
+          </div>
+
+          <div class="field-group screenshot-group">
+            <span>Landmark Screenshot</span>
+            <div class="screenshot-placeholder">
+              <div class="screenshot-caption">Screenshot placeholder</div>
+            </div>
+          </div>
+
+          <button class="primary-button" type="submit">Save Stash</button>
+        </form>
+      </section>
+
+      <section class="panel stash-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="panel-eyebrow">ACTIVE STASHES</p>
+            <h2>Live 14-day despawn dashboard</h2>
+          </div>
+          <p class="panel-copy">Timer updates every second. Reset when the stash is dug up in-game.</p>
+        </div>
+
+        <div id="stash-grid" class="stash-grid">
+          <div class="empty-state">
+            <p>No active stashes yet.</p>
+            <span>Log a stash to see the live timer appear here.</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const stashForm = document.getElementById('stash-form');
+    const stashGrid = document.getElementById('stash-grid');
+    const stashNameInput = document.getElementById('stash-name');
+    const stashLocationInput = document.getElementById('stash-location');
+    const lootCheckboxes = Array.from(document.querySelectorAll('.loot-checklist input'));
+    const STASH_DURATION_MS = 14 * 24 * 60 * 60 * 1000;
+    const STORAGE_KEY = 'dayz-stash-tracker';
+    let stashes = [];
+
+    function loadStashes() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          stashes = JSON.parse(stored).map(stash => ({
+            ...stash,
+            expiresAt: Number(stash.expiresAt)
+          }));
+        }
+      } catch (error) {
+        console.warn('Failed to load stashes:', error);
+        stashes = [];
+      }
+    }
+
+    function saveStashes() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stashes));
+    }
+
+    loadStashes();
+
+    function formatCountdown(ms) {
+      if (ms <= 0) return 'Expired';
+      const totalSeconds = Math.floor(ms / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      return `${days}d ${hours}h ${minutes}m`;
+    }
+
+    function buildLootManifest() {
+      const selected = lootCheckboxes
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => checkbox.value);
+      return selected.length ? selected.join(', ') : 'No loot selected';
+    }
+
+    function renderStashes() {
+      if (!stashes.length) {
+        stashGrid.innerHTML = `
+          <div class="empty-state">
+            <p>No active stashes yet.</p>
+            <span>Log a stash to see the live timer appear here.</span>
+          </div>
+        `;
+        return;
+      }
+
+      stashGrid.innerHTML = stashes.map(stash => {
+        const remaining = stash.expiresAt - Date.now();
+        const expiresSoon = remaining <= 72 * 60 * 60 * 1000 && remaining > 0;
+        return `
+          <article class="stash-card ${expiresSoon ? 'expiring' : ''}" data-id="${stash.id}">
+            <div class="stash-card-top">
+              <div>
+                <h3>${stash.name}</h3>
+                <p class="location-text">${stash.location}</p>
+              </div>
+              <button class="reset-button" type="button" data-id="${stash.id}">Reset 14-Day Timer</button>
+            </div>
+
+            <div class="stash-row">
+              <span class="stash-label">Loot Manifest</span>
+              <span>${stash.loot}</span>
+            </div>
+
+            <div class="stash-row stash-timer-row">
+              <span class="stash-label">Despawn Timer</span>
+              <span class="countdown-value" data-id="${stash.id}">${formatCountdown(remaining)}</span>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function updateCountdowns() {
+      const now = Date.now();
+      stashGrid.querySelectorAll('.stash-card').forEach(card => {
+        const stashId = card.dataset.id;
+        const stash = stashes.find(item => item.id === stashId);
+        if (!stash) return;
+        const remaining = stash.expiresAt - now;
+        const countdownEl = card.querySelector('.countdown-value');
+        countdownEl.textContent = formatCountdown(remaining);
+        card.classList.toggle('expiring', remaining <= 72 * 60 * 60 * 1000 && remaining > 0);
+      });
+    }
+
+    function resetStashTimer(id) {
+      const stash = stashes.find(item => item.id === id);
+      if (!stash) return;
+      stash.expiresAt = Date.now() + STASH_DURATION_MS;
+      saveStashes();
+      renderStashes();
+    }
+
+    stashForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const name = stashNameInput.value.trim();
+      const location = stashLocationInput.value.trim();
+      const loot = buildLootManifest();
+      if (!name || !location) return;
+
+      stashes.unshift({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        name,
+        location,
+        loot,
+        expiresAt: Date.now() + STASH_DURATION_MS
+      });
+
+      saveStashes();
+      stashForm.reset();
+      renderStashes();
+    });
+
+    stashGrid.addEventListener('click', event => {
+      const button = event.target.closest('.reset-button');
+      if (!button) return;
+      resetStashTimer(button.dataset.id);
+    });
+
+    renderStashes();
+    setInterval(updateCountdowns, 1000);
+  </script>
+</body>
+</html>

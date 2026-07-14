@@ -1,0 +1,346 @@
+﻿:root {
+  color-scheme: dark;
+  --bg: #101214;
+  --surface: #191c20;
+  --surface-soft: #181b1f;
+  --surface-strong: #121518;
+  --border: rgba(0, 255, 102, 0.24);
+  --text: #edf1f4;
+  --muted: #8a9788;
+  --accent: #00ff66;
+  --accent-light: #8dffb7;
+  --alert: #ff8b3c;
+  --shadow: rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(circle at 25% 5%, rgba(0, 255, 102, 0.08), transparent 18%),
+              radial-gradient(circle at 80% 15%, rgba(255, 255, 255, 0.04), transparent 18%),
+              linear-gradient(180deg, #0b0f11 0%, #090b0d 28%, #020304 100%);
+  background-blend-mode: screen, normal, normal;
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  padding: 28px;
+}
+
+.tracker-shell {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.tracker-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+  padding: 24px 28px;
+  background: rgba(17, 20, 24, 0.94);
+  border: 1px solid rgba(0, 255, 102, 0.18);
+  border-radius: 28px;
+  box-shadow: 0 22px 70px rgba(0, 255, 102, 0.14), var(--shadow);
+}
+
+.logo-mark {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #4c6a45, #7d9d6d);
+  color: #edf1f4;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tracker-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 2.5vw, 3rem);
+  line-height: 1.05;
+  color: var(--accent);
+  text-shadow: 0 0 12px rgba(0, 255, 102, 0.4), 0 0 30px rgba(0, 255, 102, 0.18);
+}
+
+.tracker-grid {
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr);
+  gap: 24px;
+}
+
+.panel {
+  background: rgba(24, 28, 34, 0.96);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  padding: 28px;
+  box-shadow: 0 18px 48px var(--shadow);
+}
+
+.panel-heading {
+  margin-bottom: 22px;
+}
+
+.panel-heading h2 {
+  margin: 6px 0 10px;
+  font-size: 1.6rem;
+}
+
+.panel-copy {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.panel-eyebrow {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.stash-form {
+  display: grid;
+  gap: 18px;
+}
+
+.field-group {
+  display: grid;
+  gap: 10px;
+}
+
+.field-group span {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #edf1f4;
+}
+
+.field-group input,
+.field-group textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: 16px 18px;
+  font-size: 0.95rem;
+}
+
+.field-group input:focus,
+.field-group textarea:focus {
+  outline: none;
+  border-color: rgba(125, 157, 109, 0.55);
+  box-shadow: 0 0 0 4px rgba(125, 157, 109, 0.12);
+}
+
+.loot-group .loot-checklist {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.loot-checklist label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.loot-checklist input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
+.screenshot-group .screenshot-placeholder {
+  min-height: 220px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(37, 44, 52, 0.96), rgba(23, 28, 34, 0.96));
+  border: 1px dashed rgba(125, 157, 109, 0.32);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
+  padding: 18px;
+}
+
+.screenshot-caption {
+  max-width: 180px;
+  line-height: 1.6;
+}
+
+.primary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 16px 22px;
+  color: #060f06;
+  background: linear-gradient(135deg, rgba(0, 255, 102, 1), rgba(0, 196, 90, 0.95));
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+  box-shadow: 0 0 18px rgba(0, 255, 102, 0.32), inset 0 0 12px rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 0 24px rgba(0, 255, 102, 0.42), inset 0 0 14px rgba(255, 255, 255, 0.1);
+}
+
+.stash-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.empty-state {
+  border: 1px dashed rgba(125, 157, 109, 0.4);
+  border-radius: 24px;
+  padding: 32px;
+  text-align: center;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.empty-state p {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.stash-card {
+  border: 1px solid rgba(0, 255, 102, 0.14);
+  border-radius: 28px;
+  padding: 22px;
+  background: rgba(12, 16, 19, 0.95);
+  box-shadow: 0 18px 45px rgba(0, 255, 102, 0.16), 0 12px 24px rgba(0, 0, 0, 0.22);
+  display: grid;
+  gap: 16px;
+}
+
+.stash-card h3 {
+  text-shadow: 0 0 8px rgba(0, 255, 102, 0.3);
+}
+
+.stash-card.expiring {
+  border-color: rgba(255, 139, 60, 0.65);
+  box-shadow: 0 18px 48px rgba(255, 139, 60, 0.18), 0 12px 24px rgba(0, 0, 0, 0.22);
+}
+
+
+.stash-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.stash-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.location-text {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.stash-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.stash-label {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.stash-timer-row {
+  align-items: center;
+}
+
+.countdown-value {
+  display: inline-flex;
+  justify-content: flex-end;
+  color: var(--text);
+  font-weight: 700;
+  background: rgba(125, 157, 109, 0.08);
+  border: 1px solid rgba(125, 157, 109, 0.18);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.stash-card.expiring .countdown-value {
+  color: var(--alert);
+  background: rgba(255, 139, 60, 0.12);
+  border-color: rgba(255, 139, 60, 0.32);
+}
+
+.reset-button {
+  border: 1px solid rgba(125, 157, 109, 0.22);
+  background: rgba(125, 157, 109, 0.08);
+  color: var(--text);
+  border-radius: 16px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.reset-button:hover {
+  transform: translateY(-1px);
+  background: rgba(125, 157, 109, 0.16);
+}
+
+@media (max-width: 1080px) {
+  .tracker-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  body {
+    padding: 18px;
+  }
+
+  .tracker-header {
+    padding: 18px;
+    gap: 14px;
+  }
+
+  .stash-card-top,
+  .stash-row {
+    grid-template-columns: 1fr;
+  }
+
+  .stash-card {
+    padding: 18px;
+  }
+}

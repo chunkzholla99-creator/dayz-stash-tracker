@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget id="com.roger.dayztracker" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>DayZ Stash Tracker</name>
+  <description>DayZ Stash Tracker mobile app shell.</description>
+  <author email="support@example.com" href="https://example.com">Roger</author>
+  <content src="index.html" />
+  <access origin="*" />
+  <preference name="Fullscreen" value="true" />
+  <preference name="Orientation" value="portrait" />
+</widget>
